@@ -55,13 +55,13 @@ public class Main {
                     Double.parseDouble(matcher.group(4)),
                     Double.parseDouble(matcher.group(5)),
                     Double.parseDouble(matcher.group(6))
-            )));
+            )), args[0]);
         } else {
             System.out.println("[INFO] 数据提取失败");
         }
     }
 
-    private static void parse(XmlRoot xml) {
+    private static void parse(XmlRoot xml, String code) {
         // 解析为 xml 线程
         new Thread(() -> {
             // todo
@@ -70,7 +70,7 @@ public class Main {
                 Marshaller marshaller = jaxbContext.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-                try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream("Exam3/tmp/股票编码.xml"), "UTF-8"), true)) {
+                try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream("Exam3/tmp/" + code + ".xml"), "UTF-8"), true)) {
                     marshaller.marshal(xml, pw);
                     System.out.println("[INFO] xml 解析完成");
                 } catch (FileNotFoundException e) {
@@ -86,7 +86,7 @@ public class Main {
         // 解析为 json 线程
         new Thread(() -> {
             ObjectMapper mapper = new ObjectMapper();
-            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream("Exam3/tmp/股票编码.json"), "UTF-8"), true)) {
+            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream("Exam3/tmp/" + code + ".json"), "UTF-8"), true)) {
                 mapper.writeValue(pw, xml.getShare());
                 System.out.println("[INFO] json 解析完成");
             } catch (FileNotFoundException e) {
